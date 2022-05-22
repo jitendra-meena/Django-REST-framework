@@ -1,6 +1,4 @@
-from functools import partial
-import imp
-from django.shortcuts import render
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -37,7 +35,7 @@ class List(APIView):
         Get API for particular Manager List
 
         PUT API for Update Manager Data
-        
+
         PATCH API for Update particular Field Data
 
         Delete API for Delete manage by id

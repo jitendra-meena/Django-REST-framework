@@ -10,6 +10,11 @@ from . serializers import ProjectListSerializer
 
 
 class ProjectList(APIView):
+    '''
+    Get all Manager List
+
+    Post API For add new manager
+    '''
 
     def get(self,request):
         project = ProjectManager.objects.all()
@@ -28,7 +33,15 @@ class ProjectList(APIView):
 
 
 class List(APIView):
+    '''
+        Get API for particular Manager List
 
+        PUT API for Update Manager Data
+        
+        PATCH API for Update particular Field Data
+
+        Delete API for Delete manage by id
+    '''
     def get(self,request,manager_id):
         project = ProjectManager.objects.get(id = manager_id)
         serializer = ProjectListSerializer(project)
@@ -57,8 +70,6 @@ class List(APIView):
             return Response(status=status.HTTP_200_OK,data=serializer.data)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)             
-
-
 
     def delete(self, request, manager_id):
         project = ProjectManager.objects.get(id = manager_id)

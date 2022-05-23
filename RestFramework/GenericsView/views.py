@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView, ListCreateAPIView , RetrieveUpdateDestroyAPIView
 from APIVIEW.models import Company, Developer, ProjectManager
-from . serializers import DeveloperSerializer
+from . serializers import DeveloperSerializer, UpdateManagerSerializer
 
 
 class Developer(ListCreateAPIView):
@@ -18,15 +18,14 @@ class Developer(ListCreateAPIView):
     serializer_class = DeveloperSerializer
 
 
-class UpdateDeveloper(RetrieveUpdateDestroyAPIView):
+class UpdateManager(RetrieveUpdateDestroyAPIView):
     
     """
-    Get and Post API Developer data add and get.
+    Get and Post,PUT and delete API for perfom action on Developer data .
 
     we can custimize Response according Requirements.
 
     """
-    queryset = Company.objects.all()
-    serializer_class = DeveloperSerializer
-    lookup_field ="id"
+    queryset = ProjectManager.objects.all()
+    serializer_class = UpdateManagerSerializer
 

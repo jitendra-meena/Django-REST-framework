@@ -5,7 +5,8 @@ from rest_framework import status
 from .models import Company,ProjectManager
 from . serializers import ProjectListSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from .paginations import CustomPagination
+from django.core.paginator import Paginator
 
 
 class ProjectList(APIView):
@@ -14,11 +15,16 @@ class ProjectList(APIView):
 
     Post API For add new manager
     '''
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    # pagination_class = CustomPagination
 
     def get(self,request):
         project = ProjectManager.objects.all()
-        serializer = ProjectListSerializer(project,many=True)
+        page_number = self.request.query_params.get('page_number ', 1)
+        page_size = self.request.query_params.get('page_size ', 3)
+
+        paginator = Paginator(project , page_size)
+        serializer = ProjectListSerializer(paginator.page(page_number),many=True)
         return Response(status=status.HTTP_200_OK,data=serializer.data)
     
     def post(self,request):

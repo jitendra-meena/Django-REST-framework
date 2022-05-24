@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView, ListCreateAPIView , RetrieveUpdateDestroyAPIView
 from APIVIEW.models import Company, Developer, ProjectManager
 from . serializers import DeveloperSerializer, UpdateManagerSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class Developer(ListCreateAPIView):

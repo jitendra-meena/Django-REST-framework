@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Company,ProjectManager
 from . serializers import ProjectListSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -13,6 +14,7 @@ class ProjectList(APIView):
 
     Post API For add new manager
     '''
+    permission_classes = (IsAuthenticated,)
 
     def get(self,request):
         project = ProjectManager.objects.all()

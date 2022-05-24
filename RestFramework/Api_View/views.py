@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from APIVIEW.models import Company, Developer, ProjectManager
 from .serializers import DeveloperSerializer
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET','POST','PUT','PATCH','DELETE'])
 def developers(self,request):

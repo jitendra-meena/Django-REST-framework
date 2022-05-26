@@ -7,7 +7,11 @@ from . serializers import ProjectListSerializer
 from rest_framework.permissions import IsAuthenticated
 from .paginations import CustomPagination
 from django.core.paginator import Paginator
-
+from django.core.cache import cache
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+ 
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 class ProjectList(APIView):
     '''
@@ -19,13 +23,15 @@ class ProjectList(APIView):
     # pagination_class = CustomPagination
 
     def get(self,request):
-        project = ProjectManager.objects.all()
-        page_number = self.request.query_params.get('page_number ', 1)
-        page_size = self.request.query_params.get('page_size ', 3)
-
-        paginator = Paginator(project , page_size)
-        serializer = ProjectListSerializer(paginator.page(page_number),many=True)
-        return Response(status=status.HTTP_200_OK,data=serializer.data)
+        if 'project' in cache:
+            project = cache.get('project')
+            serializer = ProjectListSerializer(project,many=True)
+            return Response(status=status.HTTP_200_OK,data=serializer.data)
+        else:        
+            project = ProjectManager.objects.all()
+            serializer = ProjectListSerializer(project,many=True)
+            cache.set(project, project, timeout=CACHE_TTL)
+            return Response(status=status.HTTP_200_OK,data=serializer.data)
     
     def post(self,request):
         company = request.data.get('company')

@@ -12,7 +12,7 @@ from django.core.cache import cache
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.contrib.auth.models import User
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate,logout
 
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
@@ -95,10 +95,13 @@ class List(APIView):
 
 
 
-# Authentication Code 
+# Authentication System
 
 
 class Register(APIView):
+    """
+    user Register and get details revert
+    """
     
     def get(self,request):
         users = User.objects.all()
@@ -117,6 +120,9 @@ class Register(APIView):
 
 
 class CompanyLogin(APIView):
+    """
+    Company Login and Validate data
+    """
 
     def post(self, request, format=None):
         data = request.data
@@ -131,8 +137,18 @@ class CompanyLogin(APIView):
 
                 return Response(status=status.HTTP_200_OK)
             else:
-                return Response('msg':"user in_active",status=status.HTTP_404_NOT_FOUND)
+                return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-            
+
+class CompanyLogout(APIView):
+    """
+    Company Logout Data 
+    """
+
+    def get(self,request):
+        logout(request)
+        return Response('User Logged out successfully')
+   
+

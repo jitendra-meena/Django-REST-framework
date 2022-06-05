@@ -1,16 +1,20 @@
 
+from msilib.schema import AppId
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Company,ProjectManager
-from . serializers import ProjectListSerializer
+from . serializers import ProjectListSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from .paginations import CustomPagination
 from django.core.paginator import Paginator
 from django.core.cache import cache
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
- 
+from django.contrib.auth.models import User
+from django.contrib.auth import login,authenticate
+
+
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 class ProjectList(APIView):
@@ -87,3 +91,48 @@ class List(APIView):
         project = ProjectManager.objects.get(id = manager_id)
         project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)    
+
+
+
+
+# Authentication Code 
+
+
+class Register(APIView):
+    
+    def get(self,request):
+        users = User.objects.all()
+        serializers = UserSerializer(users,many=True)
+        return Response(status=status.HTTP_200_OK,data=serializers.data)
+
+    def post(self,request):
+        serializers = UserSerializer(data=request.data)
+        if serializers.is_valid():
+            user = serializers.save()
+            password = serializers.data.get('password')
+            user.set_password(password)
+            user.save()
+            return Response(status=status.HTTP_200_OK,data=serializers.data)
+        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+class CompanyLogin(APIView):
+
+    def post(self, request, format=None):
+        data = request.data
+
+        username = data.get('username', None)
+        password = data.get('password', None)
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response('msg':"user in_active",status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+            

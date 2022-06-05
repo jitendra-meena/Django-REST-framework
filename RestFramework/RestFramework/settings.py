@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'APIVIEW',
+    # 'accounts',
     'GenericsView',
     'rest_framework'
 ]
@@ -147,3 +148,8 @@ CACHES = {
         }
     }
 }
+
+
+# AUTH_USER_MODEL = 'accounts.CustomUser'
+
+

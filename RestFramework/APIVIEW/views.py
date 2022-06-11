@@ -11,8 +11,9 @@ from django.core.paginator import Paginator
 from django.core.cache import cache
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.contrib.auth.models import User
+from accounts.models import User
 from django.contrib.auth import login,authenticate,logout
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
@@ -115,6 +116,10 @@ class Register(APIView):
             password = serializers.data.get('password')
             user.set_password(password)
             user.save()
+            user_data = serializers.data
+            user = User.objects.get(email=user_data['email'])
+            token =RefreshToken.for_user(user).access_token
+
             return Response(status=status.HTTP_200_OK,data=serializers.data)
         return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
 

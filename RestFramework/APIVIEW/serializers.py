@@ -1,9 +1,9 @@
-from dataclasses import fields
 from rest_framework import serializers
 from .models import Company,ProjectManager
 from accounts.models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 
 class ProjectListSerializer(serializers.ModelSerializer):

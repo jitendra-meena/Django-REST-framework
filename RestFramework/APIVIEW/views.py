@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Company,ProjectManager
-from . serializers import ProjectListSerializer, UserSerializer, CompanyLoginSerializer
+from . serializers import ProjectListSerializer, UserSerializer, CompanyLoginSerializer,LogoutSerializer
 from rest_framework.permissions import IsAuthenticated
 from .paginations import CustomPagination
 from django.core.paginator import Paginator
@@ -155,12 +155,18 @@ class CompanyLogin(APIView):
 
 
 class CompanyLogout(APIView):
+    serializer_class = LogoutSerializer
+    
     """
     Company Logout Data 
     """
 
-    def get(self,request):
-        logout(request)
-        return Response('User Logged out successfully')
+    def post(self, request):
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
    
 

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from APIVIEW.models import Company
 from .serializers import CompanySerializer
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet,ModelViewSet
 
 class CompanyViewSet(ViewSet):
     queryset = Company.objects.all()
@@ -47,3 +47,10 @@ class CompanyVDataiewSet(GenericViewSet):
         item = self.get_object()
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# ModelViewSet in DRF......
+
+class CompanyModelViewSet(ModelViewSet):
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()

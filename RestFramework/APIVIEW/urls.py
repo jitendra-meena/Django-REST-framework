@@ -6,6 +6,7 @@ from .views import (
    Register,
    CompanyLogin,
    CompanyLogout,
+   Developers,
    VerifyEmail,
    RequestPasswordResetEmail,
    PasswordTokenCheckAPI,
@@ -18,6 +19,8 @@ urlpatterns = [
    path('register/',Register.as_view(),name="register"),
    path('company_login/',CompanyLogin.as_view(),name="company_login"),
    path('company_logout/',CompanyLogout.as_view(),name="company_logout"),
+   path('developers/',Developers.as_view(),name="developers"),
+
    path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
    path('request-reset-email/', RequestPasswordResetEmail.as_view(),
          name="request-reset-email"),

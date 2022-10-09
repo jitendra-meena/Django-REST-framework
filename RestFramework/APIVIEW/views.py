@@ -2,7 +2,7 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Company,ProjectManager
+from .models import Company,ProjectManager, Developers,Developer,Lead
 from . serializers import ( 
     ProjectListSerializer,
     UserSerializer,
@@ -10,7 +10,8 @@ from . serializers import (
     LogoutSerializer,
     EmailVerificationSerializer,
     ResetPasswordEmailRequestSerializer,
-    SetNewPasswordSerializer
+    SetNewPasswordSerializer,
+    DevelopersSerializer
     )
 from rest_framework.permissions import IsAuthenticated
 from .paginations import CustomPagination
@@ -259,3 +260,24 @@ class SetNewPasswordAPIView(APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
+
+
+class Developers(APIView):
+    # queryset = Developers.objects.all()
+    serializer_class = DevelopersSerializer
+
+    def get(self,request, *args, **kwargs):
+        developer = Developer.objects.all()
+        serializer = DevelopersSerializer(developer,many = True)
+        return Response(data = serializer.data,status = status.HTTP_200_OK)
+
+    def post(self,request,*args,**kwargs):
+        serializer = DevelopersSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        lead = Lead.objects.get(id = request.data.get('lead'))
+        project_manager = ProjectManager.objects.get(id = request.data.get('project_manager'))
+        serializer.save(lead=lead,project_manager =project_manager)
+        return Response(data = serializer.data,status = status.HTTP_200_OK)
+
+
+    

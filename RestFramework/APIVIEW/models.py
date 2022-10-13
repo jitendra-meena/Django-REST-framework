@@ -36,8 +36,8 @@ class Developer(models.Model):
     name = models.CharField(max_length=20,blank=True)
     project = models.CharField(max_length=20,blank=True)
     experience = models.IntegerField(null=True)
-    lead = models.ForeignKey(Lead,on_delete=models.CASCADE,null=True,blank=True,related_name="developer_leads")
-    project_manager = models.ForeignKey(ProjectManager,on_delete=models.CASCADE,null=True,blank=True,related_name="developer_project_managers")
+    lead = models.ForeignKey(Lead,on_delete=models.CASCADE,null=True,blank=True)
+    project_manager = models.ForeignKey(ProjectManager,on_delete=models.CASCADE,null=True,blank=True)
 
 
     def __str__(self):
@@ -58,8 +58,8 @@ class Developers(models.Model):
     project = models.CharField(max_length=20,blank=True)
     experience = models.IntegerField(null=True)
     developer = models.CharField(max_length = 30, choices=developer,default="Python")
-    lead = models.ForeignKey(Lead,on_delete=models.CASCADE,null=True,blank=True,related_name="developer_lead")
-    project_manager = models.ForeignKey(ProjectManager,on_delete=models.CASCADE,null=True,blank=True,related_name="developer_project_manager")
+    lead = models.ForeignKey(Lead,on_delete=models.CASCADE,null=True,blank=True)
+    project_manager = models.ForeignKey(ProjectManager,on_delete=models.CASCADE,null=True,blank=True)
 
     def __str__(self):
        return self.name

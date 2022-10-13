@@ -11,7 +11,8 @@ from . serializers import (
     EmailVerificationSerializer,
     ResetPasswordEmailRequestSerializer,
     SetNewPasswordSerializer,
-    DevelopersSerializer
+    DevelopersSerializer,
+    DevelopersPOSTSerializer
     )
 from rest_framework.permissions import IsAuthenticated
 from .paginations import CustomPagination
@@ -135,7 +136,6 @@ class Register(APIView):
             user_data = serializers.data
             user = User.objects.get(email=user_data['email'])
             token =RefreshToken.for_user(user).access_token
-            breakpoint()
             current_site = get_current_site(request).domain
             relativeLink = reverse('email-verify')
             absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
@@ -144,7 +144,7 @@ class Register(APIView):
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Verify your email'}
 
-            Util.send_email(data)
+            # Util.send_email(data)
             return Response(status=status.HTTP_200_OK,data=serializers.data)
         return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -272,11 +272,9 @@ class Developers(APIView):
         return Response(data = serializer.data,status = status.HTTP_200_OK)
 
     def post(self,request,*args,**kwargs):
-        serializer = DevelopersSerializer(data = request.data)
+        serializer = DevelopersPOSTSerializer(data = request.data)
         serializer.is_valid(raise_exception=True)
-        lead = Lead.objects.get(id = request.data.get('lead'))
-        project_manager = ProjectManager.objects.get(id = request.data.get('project_manager'))
-        serializer.save(lead=lead,project_manager =project_manager)
+        serializer.save()
         return Response(data = serializer.data,status = status.HTTP_200_OK)
 
 

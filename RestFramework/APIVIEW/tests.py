@@ -2,19 +2,26 @@ from django.test import TestCase
 from .models import Company,Lead
 from django.test import Client
 from accounts.models import User
+from rest_framework.test import APITestCase
 
 
-
-class UserLoginTestCase(TestCase):
+class UserLoginTestCase(APITestCase):
   
-  
+  def setUp(self):
+    pass
 
-  def test_user_login(self):
-    breakpoint()
-    c = Client()
-    response = c.post('/apiview/company_login/', {'email': 'jm@gmail.com', 'password': 'Meena@12345'})
-    code = response.status_code
-    self.assertEqual(code, 200)
+
+  def test_register_user(self):
+      response = self.client.post('/apiview/register/', { 'username':'Jeet11','email': 'jm2@gmail.com', 'password': 'Meena@12345'})
+      code = response.status_code
+      self.assertEqual(code, 200)
+
+
+  # def test_user_login(self):
+  #   c = Client()
+  #   response = c.post('/apiview/company_login/', {'email': 'jm1@gmail.com', 'password': 'Meena@12345'})
+  #   code = response.status_code
+  #   self.assertEqual(code, 200)
 
 class Leads(TestCase):
 

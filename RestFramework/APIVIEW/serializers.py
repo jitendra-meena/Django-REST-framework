@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Company,ProjectManager,Developer
+from .models import Company,ProjectManager,Developer,Lead
 from accounts.models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
@@ -134,14 +134,31 @@ class SetNewPasswordSerializer(serializers.Serializer):
             raise AuthenticationFailed('The reset link is invalid', 401)
         return super().validate(attrs)    
 
+
+class LeadSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Lead
+        fields = ['id']
+
+
 class DevelopersSerializer(serializers.ModelSerializer):
-    exaperience_total = serializers.SerializerMethodField()
+    # exaperience_total = serializers.SerializerMethodField()
+    # lead = LeadSerializers()
 
     class Meta:
         model = Developer
         fields = "__all__"
         depth = 1
 
-    def get_exaperience_total(self,obj):
-        return obj.experience    
+    # def get_exaperience_total(self,obj):
+        # return obj.experience    
 
+class DevelopersPOSTSerializer(serializers.ModelSerializer):
+    # exaperience_total = serializers.SerializerMethodField()
+    lead = serializers.SlugRelatedField(slug_field="id", read_only=False, queryset=Lead.objects.all())
+    project_manager = serializers.SlugRelatedField(slug_field="id", read_only=False, queryset=ProjectManager.objects.all())
+
+    class Meta:
+        model = Developer
+        fields = "__all__"
+        depth = 1 

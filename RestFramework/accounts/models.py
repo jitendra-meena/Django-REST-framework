@@ -1,12 +1,18 @@
 from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from .managers import UserManager,AUTH_PROVIDERS
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
+
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
 
 
 class User(AbstractBaseUser, PermissionsMixin):
